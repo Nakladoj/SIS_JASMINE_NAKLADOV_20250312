@@ -47,18 +47,14 @@ $$
  rad/s
 $$
 
-The initial Euler angles were all set to 0 rad, and the timespan was set to 100 seconds.
+The initial Euler angles were all set to 0 rad, and the timespan was set to 100 seconds. For the integrator, the input state vector contains $\theta$ and time provided by the function at each integration step. The *ode45* function then repeatedly calls on the predefined *angular_rates* function, the timespan, and the initial angular conditions, outputting $\dot{\theta}$ and integrating for the Euler angles. Finally, in the code, $\theta$ is converted to degrees for an easier visual and plotted alongside the time *t*. The output can be seen below:
 
-theta0 = [0 0 0]'; % Initial condition
-tspan = [0 60]; % Timespan
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5683b13a-ab6a-4b29-8dc8-81426b26be14" alt="Singularity for Asymmetric Euler Angles Figure" width="500">
+</p>
 
-[t, theta] = ode45(@(t, theta) ypr(theta, omega_body), tspan, theta0);
-theta = rad2deg(theta);
+With this code, the pitch angle approaches $-90^\circ$, reaching up to $-89.8484^\circ$. When the pitch angle approaches this value in the figure at around 18, 45, 70, and 95 seconds, gimbal lock occurs the remaining two angles, yaw and roll, react accordingly. Both angles experience discontinuities and/or sharp jumps at the same time as gimbal lock occurs. This is because when this happens, the system loses one of its degrees of freedom, causing the yaw and roll angles to become unstable. 
 
-
-% Creating function to calculate angular rates = [B(theta)]*omega
-% From the textbook, Appendix B.2
-% angular rates = [B(theta)]*omega
 
 
 
@@ -69,5 +65,6 @@ theta = rad2deg(theta);
 ## References
 1. Project info
 2. textbook
-3. ode45 mtlab help
-4. ChatGPT was consulted for help with MathJax syntax.
+3. Matlab Help Center
+   3.1 Matlab ode45: https://www.mathworks.com/help/matlab/ref/ode45.html
+5. ChatGPT was consulted for help with MathJax syntax, as well as inserting figures and creating 3D animations.
