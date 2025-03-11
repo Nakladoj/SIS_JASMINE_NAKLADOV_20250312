@@ -71,7 +71,10 @@ The second scenario that will be examined is the ambiguity of the Euler Paramete
 
 ## References
 1. Project info
-2. textbook
-3. Matlab Help Center
+2. Class notes
+3. Textbook
+4. Matlab Help Center
    3.1 Matlab ode45: https://www.mathworks.com/help/matlab/ref/ode45.html
-5. ChatGPT was consulted for help with MathJax syntax, as well as inserting figures and creating 3D animations.
+   3.2 Matlab Choose an ode Solver: https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html
+   3.3 Matlab quat3dcm: https://www.mathworks.com/help/aerotbx/ug/quat2dcm.html
+5. ChatGPT was consulted for help with MathJax syntax, as well as inserting figures into the .md file.
