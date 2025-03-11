@@ -8,7 +8,7 @@ This project asks to write three (3) numerical programs to simulate three scneri
 2. Ambiguity of Euler Parameters / Quaternions
 3. Classical Rodriques Parameters
 
-This will be accomplished by integrating an attitude or dynamics equation with initial conditions. The angular velocity vecotr initial condition will be manipulated to ensure the singularity/ambiguity is approached. An additional goal of this project is to investigate whether different numerical integrators affect the singularity problem in different ways. The investiaget integrators will be as follows: *ode45*, *ode4*, and *ode15s*. 
+This will be accomplished by integrating an attitude or dynamics equation with initial conditions. The angular velocity vecotr initial condition will be manipulated to ensure the singularity/ambiguity is approached. An additional goal of this project is to investigate whether different numerical integrators affect the singularity problem in different ways. The investiaget integrators will be as follows: *ode45* for a nonstiff example, and *ode15s* for a stiff example.
 
 Finally, a 3D animation will be included to aid in analyzing each simulation.
 
@@ -50,15 +50,22 @@ $$
 The initial Euler angles were all set to 0 rad, and the timespan was set to 100 seconds. For the integrator, the input state vector contains $\theta$ and time provided by the function at each integration step. The *ode45* function then repeatedly calls on the predefined *angular_rates* function, the timespan, and the initial angular conditions, outputting $\dot{\theta}$ and integrating for the Euler angles. Finally, in the code, $\theta$ is converted to degrees for an easier visual and plotted alongside the time *t*. The output can be seen below:
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/5683b13a-ab6a-4b29-8dc8-81426b26be14" alt="Singularity for Asymmetric Euler Angles Figure" width="500">
+  <img src="https://github.com/user-attachments/assets/c446f309-f566-4a05-8376-0ae87a3ef221" alt="Singularity for Asymmetric Euler Angles Figure Using ode45" width="500">
 </p>
 
 With this code, the pitch angle approaches $-90^\circ$, reaching up to $-89.8484^\circ$. When the pitch angle approaches this value in the figure at around 18, 45, 70, and 95 seconds, gimbal lock occurs the remaining two angles, yaw and roll, react accordingly. Both angles experience discontinuities and/or sharp jumps at the same time as gimbal lock occurs. This is because when this happens, the system loses one of its degrees of freedom, causing the yaw and roll angles to become unstable. 
 
+The same process was then repeated with the ode15s function, used to solve stiff problems as opposed to ode45's nonstiff problems. The only difference between this and the previously described code is the integrator. Below are the results:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fdc93cdb-94ef-409c-aa40-8e34202ba24d" alt="Singularity for Asymmetric Euler Angles Figure Using ode15s" width="500">
+</p>
 
+As can be seen..........
 
 ## Ambiguity of Euler Parameters / Quaternions
+The second scenario that will be examined is the ambiguity of the Euler Parameters.
+
 
 ## Classical Rodriques Parameters
 
