@@ -211,13 +211,30 @@ $$
 3. The transformation is then set for the cube and the body fixed axis and its labels are manually updated.
 4. Finally, the GIF is created using a *gif* function found in Matlab's file exchange. 
 
-Below is the animation depicting the Euler Angle rotation:
+Below is the animation depicting the Euler Angle rotation. This file is also located in the submitted folder and can be opened with a browser.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/cdd76a0c-24bc-4a81-9161-30227e4550e2" alt="Euler Angles 3D Animation" width="500">
 </p>
 
 As can be seen, the animation is smooth but shows instability when the pitch angle reaches $90 ^\circ$ and the remaining two axes align. This is consistent with the plot discussed in the earlier section.
+
+For the Euler parameter, the same steps were followed, with the rotation matrix being equation 3.93 in the textbook:
+[C] = 
+\begin{bmatrix}
+\beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2 & 2(\beta_1 \beta_2 + \beta_0 \beta_3) & 2(\beta_1 \beta_3 - \beta_0 \beta_2) \\
+2(\beta_1 \beta_2 - \beta_0 \beta_3) & \beta_0^2 - \beta_1^2 + \beta_2^2 - \beta_3^2 & 2(\beta_2 \beta_3 + \beta_0 \beta_1) \\
+2(\beta_1 \beta_3 + \beta_0 \beta_2) & 2(\beta_2 \beta_3 - \beta_0 \beta_1) & \beta_0^2 - \beta_1^2 - \beta_2^2 + \beta_3^2
+\end{bmatrix}
+$$
+
+An additional difference in the steps is that the rotation matrix had to be edited into a 3x3 matrix as that is the form that the *hgtransform* expects. The resulting GIF can be seen here:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/63dcc696-c8e8-4339-a298-c119bda7e9a4" alt="Euler Parameters 3D Animation" width="500">
+</p>
+
+As can be seen, the rotation is smooth and does not have any discontinuities due to the nature of quaternions.
 
 ## Conclusion
 All three scenarios, Euler Angle singularity, Euler Parameter ambiguity, and Classical Rodrigues Parameter singularity, were successfully modeled in order to investigate their effect on an object's attitude. The Euler Angle singularity, occurring at +/- $90 ^\circ$, was approached as close as $-89.8484^\circ$. Gimbal lock occurred and the other two axes reacted accordingly, becoming unstable as can be seen in both the plots and the animation. The Euler Parameter ambiguity, that being that both a positive and a negative quaternion represent the same rotation, was modeled accordingly. The positive and negative quaternions were mirrors of each other. When converted into Euler angles, it could be seen that both the positive and negative parameters did indeed lead to the same rotation. Finally, the Classical Rodrigues Parameter singularity occurs at a principal angle of +/- $180 ^\circ$, and was represented with the created code and plot the same as the other scenarios. The plot shows the angles increasing slightly before reaching the singularity, at which the integrator stops as the simulation "blows up". To verify the results, the principal angle was plotted, and it can be seen that the discontinuity occurred at the same time as when the angle reached $180 ^\circ$.
