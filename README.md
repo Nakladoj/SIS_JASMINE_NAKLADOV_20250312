@@ -220,6 +220,8 @@ Below is the animation depicting the Euler Angle rotation. This file is also loc
 As can be seen, the animation is smooth but shows instability when the pitch angle reaches $90 ^\circ$ and the remaining two axes align. This is consistent with the plot discussed in the earlier section.
 
 For the Euler parameter, the same steps were followed, with the rotation matrix being equation 3.93 in the textbook:
+
+$$
 [C] = 
 \begin{bmatrix}
 \beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2 & 2(\beta_1 \beta_2 + \beta_0 \beta_3) & 2(\beta_1 \beta_3 - \beta_0 \beta_2) \\
