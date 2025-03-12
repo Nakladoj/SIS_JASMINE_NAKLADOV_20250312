@@ -119,11 +119,11 @@ The last scenario that will be examined is the CLassical Rodriques Parameters si
 The equations used for this function are as follows, noted as equations 3.130 and 3.131 in the textbook.
 
 $$
-[\dot{**q**}] = \frac{1}{2} * [[I] + [\bar{**q**}] + **qq**^T]^\beta **\omega**
+[\dot{q}] = \frac{1}{2} * [[I] + [\bar{q}] + qq^T]^\beta \omega
 $$
 
 $$ 
-[\dot{**q**}] = \frac{1}{2} *
+[\dot{q}] = \frac{1}{2} *
 \begin{bmatrix}
 1 + q_1^2 & q_1q_2 - q_3 & q_1q_3 + q_2 \\
 q_2q_1 + q_3 & 1 + q_2^2 & q_2q_3 - q_1 \\
@@ -151,7 +151,7 @@ As can be seen, there is a large discontinuity at around 13 seconds. Although th
 To prove that the discontinuity occurs at $180 ^\circ$, the principal angle was calculated and plotted. The equation used to calculate the angle is equation 3.116 in the textbook:
 
 $$
-**q** = tan \frac{\phi}{2}\hat{**e**}
+q = tan \frac{\phi}{2}\hat{e}
 $$
 
 which can then be rearranged for \phi:
