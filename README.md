@@ -12,7 +12,7 @@ This will be accomplished by integrating an attitude or dynamics equation with i
 
 Finally, a 3D animation will be included to aid in analyzing each simulation.
 
-Any references used in this project are located at the bottom of this .md file.
+Any references used in this project are located at the bottom of this .md file. Matlab toolboxes used for this code include the Aerospace Toolbox as well as the Robotics System Toolbox.
 
 ## Singularity for Asymmetric Euler Angle Sets
 The first scenario that will be examined is the singularity of Asymmetric Euler Angles. The specific sequence chosen was the classic 3-2-1 Yaw Pitch Roll rotation. For this rotation, geometric singularity occurs at a pitch angle of +/- $90^\circ$, where the two remaining angles are not uniquely defined. The following process will be followed for Scenarios 2. and 3. as well. 
@@ -38,7 +38,7 @@ In the matrix equation, it can be clearly seen that a singularity occurs at $\th
 Above the function, the body angular velocity vector, initial angles, timespan, and the ode's input state vector are defined. The angular velocity vector, defined as *omega_body*, is important and serves as the main way to manipulate the angles towards singularity. The actual values of the $\omega$ vector are arbitrary, and many variations were tested to see which would bring the pitch angle, $\theta_2$, close to the singularity. The final values chosen for this part of the project are as follows:
 
 $$
-[B(\theta)] = 
+[\omega] = 
 \begin{bmatrix}
 0.1 \\
 0.2 \\
@@ -61,20 +61,120 @@ The same process was then repeated with the ode15s function, used to solve stiff
   <img src="https://github.com/user-attachments/assets/fdc93cdb-94ef-409c-aa40-8e34202ba24d" alt="Singularity for Asymmetric Euler Angles Figure Using ode15s" width="500">
 </p>
 
-As can be seen..........
+As can be seen in the plots, there are some important differences between the two integrators. The Pitch angle appears to be the same for both integrators, oscillating every ~25 seconds. The Yaw angle still shows discontinuities at $-90^\circ$ when the singularity is hit, but they are more subtle with the *ode45* integrator. It is the opposite for the Roll angle, where the discontinuities are large with *ode45* but more subtle with *ode15s*. The *ode15s* function overall seems more stable, dampening the singularity behavior. 
 
 ## Ambiguity of Euler Parameters / Quaternions
-The second scenario that will be examined is the ambiguity of the Euler Parameters.
+The second scenario that will be examined is the ambiguity of the Euler Parameters. Euler Parameters (or Quaternions) do not have a singularity causing gimbal lock due to their nature, as a division by 0 never occurs. However, the parameters have their own ambiguity in that a positive or negative vector both represent the same rotation. In the code, the quaternions were calculated with the same body angular velocity conditions and similar initial conditions, with a 1 being included for the fourth parameter to ensure that the norm is 1. The calculation of the quaternions is structured the same way as that of the Euler angles, with one difference being thata the values are normalized after integrating, once again to ensure that the norm is 1. The function differs as well, but only in the equations it represents. Equations 3.105 and 3.106 from the textbook was used to calculate the parameters and can be seen as follows.
 
+$$
+\dot{\beta} = \frac{1}{2} * [B(\beta)]^\beta \omega
+$$
+
+$$
+\begin{pmatrix}
+\dot{\beta}_0 \\
+\dot{\beta}_1 \\
+\dot{\beta}_2 \\
+\dot{\beta}_3 \\
+\end{pmatrix} = \frac{1}{2} *
+\begin{bmatrix}
+\beta_0 & -\beta_1 & -\beta_2  & -\beta_3 \\
+\beta_1 & \beta_0 & -\beta_3  & \beta_2 \\
+\beta_2 & \beta_3 & \beta_0  & -\beta_1 \\
+\beta_3 & -\beta_2 & \beta_1  & \beta_0  
+\end{bmatrix}
+\begin{pmatrix}
+0 \\
+\omega_1 \\
+\omega_2 \\
+\omega_3 \\
+\end{pmatrix}
+$$
+
+The process was repeated for both positive and negative parameters. Below is the resulting plot after ode45 was used, showing both the positive and negative parameters. 
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/bbbf16cd-df11-4746-9bad-6eb534045c87" alt="Euler Parameters Over Time Using *ode45*" width="500">
+</p>
+
+It can be seen in this plot that the positve and negative quaternions are mirrors of each other. The same process can once again be done with *ode15s* in order to see how the parameters behave with a different integrator. These results can be seen below:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/22ad8621-119b-41bf-aeab-a6215fc26002" alt="Euler Parameters Over Time Using *ode15s*" width="500">
+</p>
+
+As can be seen, there is no difference between the results of the integrators. 
+
+To further show that the quaternions represent the same rotation no matter their sign, the Euler parameters were converted back into Euler angles. This conversion shows that the angles are the same, no matter what the sign is. A graphical representation of this can be seen below.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/84922ad4-e794-47d5-af45-4785eefd2585" alt="Euler Parameters Converted to Euler Angles" width="500">
+</p>
+
+This representation confirms that quaternions represent the same rotation, no matter their sign.
 
 ## Classical Rodriques Parameters
+The last scenario that will be examiend is the CLassical Rodriques Parameters singularity. For this representation, a singularity occurs at $ **\phi** = +/- 180 ^\circ$, with **\phi** representing the principal angle . The same process as the previous two simulations was followed for this one, with a function being created to represent the appropriate equations and integrators being used to derive the parameters. The initial angular velocity 
+
+The equations used for this function are as follows, noted as equation 3.130 and 3.131 in the textbook.
+
+$$
+[\dot{**q**}] = \frac{1}{2} * [[I] + [\bar{**q**}] + **qq**^T]^\beta **\omega**
+$$
+
+$$ 
+[\dot{**q**}] = \frac{1}{2} *
+\begin{bmatrix}
+1 + q_1^2 & q_1q_2 - q_3 & q_1q_3 + q_2 \\
+q_2q_1 + q_3 & 1 + q_2^2 & q_2q_3 - q_1 \\
+q_3q_1 - q_2 & q_3q_2 + q_1 & 1 + q_3^2
+\end{bmatrix} ^\beta
+\begin{pmatrix}
+\omega_1 \\
+\omega_2 \\
+\omega_3 \\
+\end{pmatrix}
+$$
+
+The resulting graph, solved with the *ode45* function, is as follows:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6c3a8728-6d87-480e-acde-23c6b4393077" alt="Classical Rodriques Parameters Using *ode45*" width="500">
+</p>
+
+As can be seen, there is a large discontinuity at around 13 seconds. Although the graph appears to be only at 0 prior to the discontinuity, when examining the values in the Matlab workspace this is untrue. The values start at the initial condition of [0 0 0], they increase as they reach the discontinuity. This discontinuity occurs because the principal angle hits $180 ^\circ$. When integrated with *ode15s*, the same result can be seen:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/034599ae-26a0-49c5-89b9-fdfd992b7d9e" alt="Classical Rodriques Parameters Using *ode15s*" width="500">
+</p>
+
+To prove that the discontuity occurs at $180 ^\circ$, the principal angle was calculated and plotted. The equation used to calculate the angle is equation 3.116 in the textbook:
+
+$$
+**q** = tan \frac{\phi}{2}\hat{**e**}
+$$
+
+which can then be rearranged for \phi:
+
+$$
+\phi = 2* tan^{-1}(q)
+$$
+
+In the code, the Rodriques Parameters weren normalized and then plugged into the \phi equation. The resulting plot is as follows:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2176c180-8b4d-45d3-b346-a882728b803b" alt="Principal Angle for CLassical Rodrigues Parameters" width="500">
+</p>
+
+As can be seen in this plot, the principal angle reaches $180 ^\circ$ at the same time as the discontinuity occurs.
 
 ## References
-1. Project info
-2. Class notes
-3. Textbook
+1. Programming Project 01 Project Instructions
+2. AE544 Class Notes, Specifically Chapter 3
+3. Analytical Mechanics of Space Systems, 2^{nd} edition, by Hanspeter Schaub and John L. Junkins 
 4. Matlab Help Center
    3.1 Matlab ode45: https://www.mathworks.com/help/matlab/ref/ode45.html
    3.2 Matlab Choose an ode Solver: https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html
    3.3 Matlab quat3dcm: https://www.mathworks.com/help/aerotbx/ug/quat2dcm.html
-5. ChatGPT was consulted for help with MathJax syntax, as well as inserting figures into the .md file.
+   3.4 Matlab quat2eul: https://www.mathworks.com/help/robotics/ref/quat2eul.html
+6. ChatGPT was consulted for help with MathJax syntax, as well as inserting figures into the .md file.
